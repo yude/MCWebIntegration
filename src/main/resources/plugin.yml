@@ -1,0 +1,7 @@
+name: MCWebIntegration
+version: '${project.version}'
+main: jp.yude.mcwebintegration.mcwebintegration.MCWebIntegration
+api-version: 1.17
+authors: [ yude ]
+description: Integrate the data on Minecraft server with Web API.
+website: https://github.com/yude/MCWebIntegration

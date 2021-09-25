@@ -1,0 +1,6 @@
+host: 127.0.0.1
+db_port: 3306
+database: MCWebIntegration
+user: minecraft
+password: minecraft
+web_port: 40090
