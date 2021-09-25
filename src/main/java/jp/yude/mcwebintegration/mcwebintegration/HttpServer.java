@@ -1,18 +1,26 @@
 package jp.yude.mcwebintegration.mcwebintegration;
 
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static jp.yude.mcwebintegration.mcwebintegration.MCWebIntegration.getLuckPermsAPI;
 import static spark.Spark.*;
 import static spark.Spark.get;
 
 public class HttpServer {
-    public HttpServer(Connection connection) {
+    public HttpServer(Connection connection, Plugin plugin) {
         // Specify port to expose for web API server.
         Integer web_port = MCWebIntegration.instance.getConfig().getInt("web_port");
         port(web_port);
@@ -48,6 +56,53 @@ public class HttpServer {
                 }
             } else {
                 return "false";
+            }
+        });
+
+        // Provide the specified player's the most important permission group on LuckPerms
+        get("/group/:uuid", (req, res) -> {
+            // Check if query is truly UUID in order to avoid SQL injection
+            if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                // Convert UUID string to player object
+                User user = getLuckPermsAPI().getUserManager().getUser(UUID.fromString(req.params(":uuid")));
+                String result = "null";
+                if (user == null) {
+                    Set<String> groups = user.getNodes().stream()
+                            .filter(NodeType.INHERITANCE::matches)
+                            .map(NodeType.INHERITANCE::cast)
+                            .map(InheritanceNode::getGroupName)
+                            .collect(Collectors.toSet());
+                    for (Iterator<String> group = groups.iterator(); group.hasNext(); ) {
+                        String g = group.next();
+                        if (g != "default") {
+                            result = g;
+                        }
+                    }
+                }
+                return result;
+            } else {
+                return "invalid_uuid";
+            }
+        });
+
+        // Provide the specified player's permission groups on LuckPerms
+        get("/groups/:uuid", (req, res) -> {
+            // Check if query is truly UUID in order to avoid SQL injection
+            if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                // Convert UUID string to player object
+                User user = getLuckPermsAPI().getUserManager().getUser(UUID.fromString(req.params(":uuid")));
+                String result = "null";
+                if (user == null) {
+                    Set<String> groups = user.getNodes().stream()
+                            .filter(NodeType.INHERITANCE::matches)
+                            .map(NodeType.INHERITANCE::cast)
+                            .map(InheritanceNode::getGroupName)
+                            .collect(Collectors.toSet());
+                    result = groups.toString();
+                }
+                return result;
+            } else {
+                return "invalid_uuid";
             }
         });
 
