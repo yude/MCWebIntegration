@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static jp.yude.mcwebintegration.mcwebintegration.MCWebIntegration.getLuckPermsAPI;
@@ -64,19 +65,17 @@ public class HttpServer {
             // Check if query is truly UUID in order to avoid SQL injection
             if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
                 // Convert UUID string to player object
-                User user = getLuckPermsAPI().getUserManager().getUser(UUID.fromString(req.params(":uuid")));
                 String result = "null";
-                if (user == null) {
-                    Set<String> groups = user.getNodes().stream()
-                            .filter(NodeType.INHERITANCE::matches)
-                            .map(NodeType.INHERITANCE::cast)
-                            .map(InheritanceNode::getGroupName)
-                            .collect(Collectors.toSet());
-                    for (Iterator<String> group = groups.iterator(); group.hasNext(); ) {
-                        String g = group.next();
-                        if (g != "default") {
-                            result = g;
-                        }
+                CompletableFuture<User> userFuture = getLuckPermsAPI().getUserManager().loadUser(UUID.fromString(req.params(":uuid")));
+                Set<String> groups = userFuture.join().getNodes().stream()
+                        .filter(NodeType.INHERITANCE::matches)
+                        .map(NodeType.INHERITANCE::cast)
+                        .map(InheritanceNode::getGroupName)
+                        .collect(Collectors.toSet());
+                for (Iterator<String> group = groups.iterator(); group.hasNext(); ) {
+                    String g = group.next();
+                    if (g != "default") {
+                        result = g;
                     }
                 }
                 return result;
@@ -90,16 +89,14 @@ public class HttpServer {
             // Check if query is truly UUID in order to avoid SQL injection
             if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
                 // Convert UUID string to player object
-                User user = getLuckPermsAPI().getUserManager().getUser(UUID.fromString(req.params(":uuid")));
                 String result = "null";
-                if (user == null) {
-                    Set<String> groups = user.getNodes().stream()
-                            .filter(NodeType.INHERITANCE::matches)
-                            .map(NodeType.INHERITANCE::cast)
-                            .map(InheritanceNode::getGroupName)
-                            .collect(Collectors.toSet());
-                    result = groups.toString();
-                }
+                CompletableFuture<User> userFuture = getLuckPermsAPI().getUserManager().loadUser(UUID.fromString(req.params(":uuid")));
+                Set<String> groups = userFuture.join().getNodes().stream()
+                        .filter(NodeType.INHERITANCE::matches)
+                        .map(NodeType.INHERITANCE::cast)
+                        .map(InheritanceNode::getGroupName)
+                        .collect(Collectors.toSet());
+                result = groups.toString();
                 return result;
             } else {
                 return "invalid_uuid";
