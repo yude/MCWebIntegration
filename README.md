@@ -9,6 +9,7 @@
 ## Setup
 ### Prerequisites
 * Working MySQL server
+* [LuckPerms](https://luckperms.net) 5.x
 ### Step-by-step
 1. Copy and paste the plugin jar file into plugins/
 2. Create database for this plugin.
