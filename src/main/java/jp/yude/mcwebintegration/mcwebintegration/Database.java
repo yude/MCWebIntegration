@@ -17,7 +17,7 @@ public class Database {
         String database = MCWebIntegration.config.getDatabase();
         String user = MCWebIntegration.config.getUser();
         String password = MCWebIntegration.config.getPassword();
-        String url = "jdbc:mysql://" + host + ":" + db_port + "/" + database;
+        String url = "jdbc:mysql://" + host + ":" + db_port + "/" + database + "?autoReconnect=true";
 
         try {
             connection = DriverManager.getConnection(url, user, password);
