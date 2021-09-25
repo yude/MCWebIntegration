@@ -3,8 +3,8 @@
 
 ## Web API: `http://<host>:<web_port>`
 * `/online/<uuid with hyphen>`: Returns whether the specified player is online.
-* `/last/<uuid with hyphen>` returns the specified player's last online timestamp with unixtime.
-* `/first/<uuid with hyphen>` returns timestamp when the specified player first joined the server.
+* `/last/<uuid with hyphen>` Returns the specified player's last online timestamp in unixtime.
+* `/first/<uuid with hyphen>` Returns the specified player's the first joined timestamp in unixtime.
 
 ## Setup
 ### Prerequisites
