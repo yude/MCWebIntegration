@@ -26,6 +26,7 @@ public class Event implements Listener {
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setLong(1, System.currentTimeMillis() / 1000L);
                 stmt.setString(2, player.getUniqueId().toString());
+                stmt.executeUpdate();
             } else {
                 String sql = "INSERT INTO `timestamp` (uuid, last, first) VALUES (?, ?, ?);";
                 PreparedStatement stmt = connection.prepareStatement(sql);
