@@ -55,7 +55,7 @@ public class HttpServer {
         get("/last/:uuid", (req, res) -> {
             // Check if query is truly UUID in order to avoid SQL injection
             if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-                String sql = "SELECT * FROM `players` WHERE uuid = '" + req.params(":uuid") +"';";
+                String sql = "SELECT * FROM `timestamp` WHERE uuid = '" + req.params(":uuid") +"';";
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 ResultSet results = stmt.executeQuery();
                 if (results.next()) {
@@ -72,7 +72,7 @@ public class HttpServer {
         get("/first/:uuid", (req, res) -> {
             // Check if query is truly UUID in order to avoid SQL injection
             if (req.params(":uuid").matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-                String sql = "SELECT * FROM `players` WHERE uuid = '" + req.params(":uuid") +"';";
+                String sql = "SELECT * FROM `timestamp` WHERE uuid = '" + req.params(":uuid") +"';";
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 ResultSet results = stmt.executeQuery();
                 if (results.next()) {

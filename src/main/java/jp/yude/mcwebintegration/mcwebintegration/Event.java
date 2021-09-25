@@ -16,19 +16,19 @@ public class Event implements Listener {
         Player player = event.getPlayer();
         Connection connection = Database.Database();
         // Save player's data to db
-        String sql_search = "SELECT * FROM `players` WHERE uuid = '" + player.getUniqueId() +"';";
+        String sql_search = "SELECT * FROM `timestamp` WHERE uuid = '" + player.getUniqueId() +"';";
         try {
             PreparedStatement stmt_search = connection.prepareStatement(sql_search);
             ResultSet results_search = stmt_search.executeQuery();
             if (results_search.next()) {
-                String sql = "UPDATE `players` SET `last` = '" + System.currentTimeMillis() / 1000L + "' WHERE `uuid` = '" + player.getUniqueId() + "';";
+                String sql = "UPDATE `timestamp` SET `last` = '" + System.currentTimeMillis() / 1000L + "' WHERE `uuid` = '" + player.getUniqueId() + "';";
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setLong(1, System.currentTimeMillis() / 1000L);
                 stmt.setString(2, player.getUniqueId().toString());
 
                 stmt.executeUpdate();
             } else {
-                String sql = "INSERT INTO `players` (uuid, last, first) VALUES ('" + player.getUniqueId() + "', '" + System.currentTimeMillis() / 1000L + "', '" + player.getFirstPlayed() / 1000L + "');";
+                String sql = "INSERT INTO `timestamp` (uuid, last, first) VALUES ('" + player.getUniqueId() + "', '" + System.currentTimeMillis() / 1000L + "', '" + player.getFirstPlayed() / 1000L + "');";
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.executeUpdate();
             }

@@ -25,7 +25,7 @@ public class Database {
             e.printStackTrace();
         }
         // Initialize table
-        String sql = "CREATE TABLE IF NOT EXISTS `players` (" +
+        String sql = "CREATE TABLE IF NOT EXISTS `timestamp` (" +
                 " `uuid` VARCHAR(50) COLLATE utf8mb4_unicode_ci," +
                 " `last` BIGINT(50) COLLATE utf8mb4_unicode_ci," +
                 " `first` BIGINT(50) COLLATE utf8mb4_unicode_ci," +
