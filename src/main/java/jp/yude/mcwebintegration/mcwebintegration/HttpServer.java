@@ -57,7 +57,7 @@ public class HttpServer {
                     return "false";
                 }
             } else {
-                return "false";
+                return "not_found";
             }
         });
 
