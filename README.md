@@ -2,10 +2,24 @@
 🌏🎮 Integrate data provided from Minecraft server with Web API.
 
 ## Web API: `http://<host>:<web_port>`
-* `/online/<uuid with hyphen>`: Returns whether the specified player is online.
-* `/last/<uuid with hyphen>` Returns the specified player's last online timestamp in unixtime.
-* `/first/<uuid with hyphen>` Returns the specified player's the first joined timestamp in unixtime.
-
+### Common
+* If the specified UUID is invalid, endpoints return `invalid_uuid`.
+* If the specified player is not found, endpoints return `not_found`.
+### Player online status
+* `/online/<uuid with hyphen>`\
+Return whether the specified player is online. (`true` or `false`)
+### Timestamp
+* `/last/<uuid with hyphen>`\
+Return the specified player's last online timestamp in unixtime.
+* `/first/<uuid with hyphen>`\
+Return the specified player's the first joined timestamp in unixtime.
+### Group
+* `/group/<uuid with hyphen>`\
+Return the most important user group to which the specified player belongs. \
+(e.g. If user belongs 2 group: `["default", "staff"]`, the result will be `staff`.)
+* `/groups/<uuid with hyphen>`\
+Return all groups to which the specified player belongs. \
+(e.g. If user belongs 2 group: `["default", "staff"]`, the result will be `["default", "staff"]`.)
 ## Setup
 ### Prerequisites
 * Working MySQL server
