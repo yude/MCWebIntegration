@@ -1,5 +1,6 @@
 package jp.yude.mcwebintegration.mcwebintegration;
 
+import com.google.gson.Gson;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
@@ -10,9 +11,7 @@ import org.bukkit.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -138,5 +137,18 @@ public class HttpServer {
             }
         });
 
+        // Provide all the player's name
+        get("/players", (req, res) -> {
+            String sql = "SELECT * FROM `timestamp`;";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet results = stmt.executeQuery();
+
+            List<String> players = new ArrayList<>();
+            while(results.next()){
+                players.add(results.getString("name"));
+            }
+
+            return new Gson().toJson(players);
+        });
     }
 }
