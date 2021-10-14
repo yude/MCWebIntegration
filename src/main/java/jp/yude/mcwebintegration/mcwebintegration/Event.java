@@ -1,5 +1,6 @@
 package jp.yude.mcwebintegration.mcwebintegration;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,12 +18,13 @@ public class Event implements Listener {
         Player player = event.getPlayer();
         Connection connection = Database.Database();
         // Save player's data to db
-        String sql_search = "SELECT * FROM `timestamp` WHERE uuid = '" + player.getUniqueId() +"';";
         try {
+            String sql_search = "SELECT * FROM `timestamp` WHERE `uuid` = ?;";
             PreparedStatement stmt_search = connection.prepareStatement(sql_search);
+            stmt_search.setString(1, player.getUniqueId().toString());
             ResultSet results_search = stmt_search.executeQuery();
             if (results_search.next()) {
-                String sql = "UPDATE `timestamp` SET `last` = ?, `name` = ?, WHERE `uuid` = ?;";
+                String sql = "UPDATE `timestamp` SET `last` = ?, `name` = ? WHERE `uuid` = ?;";
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setLong(1, System.currentTimeMillis() / 1000L);
                 stmt.setString(2, player.getDisplayName());
